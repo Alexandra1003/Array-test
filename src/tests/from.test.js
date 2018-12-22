@@ -8,7 +8,7 @@ describe('tests for method FROM', () => {
   test('Instance has not Own Property FROM', () => {
     const arr = new MyArray(1, 4, 0);
 
-    expect(MyArray.Object.prototype.hasOwnProperty.call('from')).toBeTruthy();
+    expect(Object.prototype.hasOwnProperty.call(MyArray, 'from')).toBeTruthy();
     expect(Object.prototype.hasOwnProperty.call(arr, 'from')).toBeFalsy();
   });
 
