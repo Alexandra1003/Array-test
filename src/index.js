@@ -1,9 +1,14 @@
 class MyArray {
   constructor(...args) {
-    for (let i = 0; i < args.length; i++) {
-      this[i] = args[i];
+    if (args.length === 1 && typeof args[0] === 'number') {
+      this.length = args[0];
+    } else {
+      this.length = args.length;
+
+      for (let i = 0; i < args.length; i++) {
+        this[i] = args[i];
+      }
     }
-    this.length = args.length;
   }
 
   push(...args) {
@@ -86,8 +91,8 @@ class MyArray {
 
     for (let i = 0; i < this.length; i++) {
       if (i !== this.length - 1) {
-        const a = ',';
-        result += this[i] + a;
+        const separator = ',';
+        result += this[i] + separator;
       } else {
         result += this[i];
       }
