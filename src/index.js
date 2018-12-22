@@ -195,5 +195,39 @@ class MyArray {
       return this;
     }
   }
+
+  slice(begin, end) {
+    const newArr = new MyArray();
+    let start = begin;
+    let finish = end;
+
+    if (!begin && !end) {
+      return (MyArray.from(this));
+    }
+
+    if (!begin) {
+      start = 0;
+    }
+
+    if (begin < 0) {
+      start += this.length;
+    }
+
+    if (end < 0) {
+      finish += this.length;
+    }
+
+    if (!end) {
+      for (let i = start; i < this.length; i++) {
+        newArr.push(this[i]);
+      }
+    } else {
+      for (let i = start; i < finish; i++) {
+        newArr.push(this[i]);
+      }
+    }
+    return newArr;
+  }
 }
+
 export default MyArray;
