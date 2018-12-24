@@ -228,6 +228,26 @@ class MyArray {
     }
     return newArr;
   }
+
+  find(callback, thisArg) {
+    if (typeof (callback) !== 'function') {
+      throw new TypeError('Callback is not a function.');
+    }
+
+    if (thisArg) {
+      for (let i = 0; i < this.length; i++) {
+        if (callback.call(thisArg, this[i], i, this)) {
+          return this[i];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.length; i++) {
+        if (callback(this[i], i, this)) {
+          return this[i];
+        }
+      }
+    }
+  }
 }
 
 export default MyArray;
