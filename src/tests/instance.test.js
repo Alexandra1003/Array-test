@@ -23,12 +23,15 @@ describe('tests for instance', () => {
     expect(myArr).toHaveProperty('length');
   });
 
-  test('Prototype have only declarated method and constructor', () => {
+  test('Prototype has only declarated methods and constructor', () => {
     const declaratedMethods = ['constructor', 'find', 'slice', 'push', 'pop', 'toString', 'map',
-      'filter', 'forEach', 'reduce', 'sort', Symbol(Symbol.iterator)];
+      'filter', 'forEach', 'reduce', 'sort', Symbol.iterator];
+    const declaratedMethodsLength = 12;
+
     const prototypeMethods = Reflect.ownKeys(MyArray.prototype);
 
-    expect(prototypeMethods).toEqual(declaratedMethods);
+    expect(prototypeMethods).toEqual(expect.arrayContaining(declaratedMethods));
+    expect(prototypeMethods.length).toBe(declaratedMethodsLength);
   });
 
   test('Class has only declarated static method and common like \'length\', \'prototype\', \'from\', \'name\'', () => {
