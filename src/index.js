@@ -101,33 +101,16 @@ class MyArray {
   }
 
   filter(callback, thisArg) {
-    if (!callback) {
-      return;
-    }
-
     const newObj = new MyArray();
 
-    if (thisArg) {
-      for (let i = 0; i < this.length; i++) {
-        const match = callback.call(thisArg, this[i], i, this);
+    for (let i = 0; i < this.length; i++) {
+      const match = callback.call(thisArg, this[i], i, this);
 
-        if (match) {
-          newObj.push(this[i]);
-        }
-      }
-    } else {
-      for (let i = 0; i < this.length; i++) {
-        const match = callback(this[i], i, this);
-
-        if (match) {
-          newObj.push(this[i]);
-        }
+      if (match) {
+        newObj.push(this[i]);
       }
     }
 
-    if (newObj.length === 0) {
-      return newObj;
-    }
     return newObj;
   }
 
