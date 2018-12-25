@@ -38,14 +38,8 @@ class MyArray {
         newArr.push(arrayLike[i]);
       }
     } else if (mapFn) {
-      if (thisArg) {
-        for (let i = 0; i < arrayLike.length; i++) {
-          newArr.push(mapFn.call(thisArg, arrayLike[i]));
-        }
-      } else {
-        for (let i = 0; i < arrayLike.length; i++) {
-          newArr.push(mapFn(arrayLike[i]));
-        }
+      for (let i = 0; i < arrayLike.length; i++) {
+        newArr.push(mapFn.call(thisArg, arrayLike[i]));
       }
     }
     return newArr;
