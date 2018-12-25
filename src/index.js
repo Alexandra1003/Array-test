@@ -74,15 +74,10 @@ class MyArray {
 
     const newObj = new MyArray();
 
-    if (thisArg) {
-      for (let i = 0; i < this.length; i++) {
-        newObj.push(callback.call(thisArg, this[i], i, this));
-      }
-    } else {
-      for (let i = 0; i < this.length; i++) {
-        newObj.push(callback(this[i], i, this));
-      }
+    for (let i = 0; i < this.length; i++) {
+      newObj.push(callback.call(thisArg, this[i], i, this));
     }
+
     return newObj;
   }
 
