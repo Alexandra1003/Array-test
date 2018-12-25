@@ -56,14 +56,8 @@ class MyArray {
       return;
     }
 
-    if (thisArg) {
-      for (let i = 0; i < this.length; i++) {
-        callback.call(thisArg, this[i], i, this);
-      }
-    } else {
-      for (let i = 0; i < this.length; i++) {
-        callback(this[i], i, this);
-      }
+    for (let i = 0; i < this.length; i++) {
+      callback.call(thisArg, this[i], i, this);
     }
   }
 
