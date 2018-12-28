@@ -99,21 +99,12 @@ class MyArray {
       return initialValue;
     }
 
-    let accumulator = null;
+    let accumulator = initialValue === undefined ? this[0] : callback(initialValue, this[0], 0, this);
 
-    if (typeof (initialValue) !== 'undefined') {
-      accumulator = initialValue;
-
-      for (let i = 0; i < this.length; i++) {
-        accumulator = callback(accumulator, this[i], i, this);
-      }
-    } else {
-      accumulator = this[0];
-
-      for (let i = 1; i < this.length; i++) {
-        accumulator = callback(accumulator, this[i], i, this);
-      }
+    for (let i = 1; i < this.length; i++) {
+      accumulator = callback(accumulator, this[i], i, this);
     }
+
     return accumulator;
   }
 
