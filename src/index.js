@@ -67,12 +67,14 @@ class MyArray {
 
   toString() {
     let result = '';
-    let separator = '';
 
-    this.forEach(item => {
-      result += separator + item;
-      separator = ',';
-    });
+    if (this.length > 0) {
+      for (let i = 0; i < this.length - 1; i++) {
+        result += `${this[i]},`;
+      }
+      result += `${this[this.length - 1]}`;
+    }
+
     return result;
   }
 
