@@ -56,10 +56,6 @@ class MyArray {
   }
 
   map(callback, thisArg) {
-    if (typeof (callback) !== 'function') {
-      throw new TypeError('Callback is not a function.');
-    }
-
     const newObj = new MyArray();
 
     for (let i = 0; i < this.length; i++) {
