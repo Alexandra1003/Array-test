@@ -91,16 +91,8 @@ class MyArray {
   }
 
   reduce(callback, initialValue) {
-    if (!callback) {
-      return;
-    }
-
     if (this.length === 0 && !initialValue) {
       throw new TypeError('MyArray.prototype.reduce called on null or undefined');
-    }
-
-    if (this.length === 1 && !initialValue) {
-      return this[0];
     }
 
     if (this.length === 0 && initialValue) {
