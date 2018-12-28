@@ -56,10 +56,6 @@ class MyArray {
   }
 
   map(callback, thisArg) {
-    if (typeof (callback) !== 'function') {
-      throw new TypeError('Callback is not a function.');
-    }
-
     const newObj = new MyArray();
 
     for (let i = 0; i < this.length; i++) {
@@ -72,14 +68,13 @@ class MyArray {
   toString() {
     let result = '';
 
-    for (let i = 0; i < this.length; i++) {
-      if (i !== this.length - 1) {
-        const separator = ',';
-        result += this[i] + separator;
-      } else {
-        result += this[i];
+    if (this.length > 0) {
+      for (let i = 0; i < this.length - 1; i++) {
+        result += `${this[i]},`;
       }
+      result += `${this[this.length - 1]}`;
     }
+
     return result;
   }
 
@@ -98,37 +93,20 @@ class MyArray {
   }
 
   reduce(callback, initialValue) {
-    if (!callback) {
-      return;
-    }
-
     if (this.length === 0 && !initialValue) {
       throw new TypeError('MyArray.prototype.reduce called on null or undefined');
-    }
-
-    if (this.length === 1 && !initialValue) {
-      return this[0];
     }
 
     if (this.length === 0 && initialValue) {
       return initialValue;
     }
 
-    let accumulator = null;
+    let accumulator = initialValue === undefined ? this[0] : callback(initialValue, this[0], 0, this);
 
-    if (typeof (initialValue) !== 'undefined') {
-      accumulator = initialValue;
-
-      for (let i = 0; i < this.length; i++) {
-        accumulator = callback(accumulator, this[i], i, this);
-      }
-    } else {
-      accumulator = this[0];
-
-      for (let i = 1; i < this.length; i++) {
-        accumulator = callback(accumulator, this[i], i, this);
-      }
+    for (let i = 1; i < this.length; i++) {
+      accumulator = callback(accumulator, this[i], i, this);
     }
+
     return accumulator;
   }
 
