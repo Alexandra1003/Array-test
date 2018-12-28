@@ -71,15 +71,12 @@ class MyArray {
 
   toString() {
     let result = '';
+    let separator = '';
 
-    for (let i = 0; i < this.length; i++) {
-      if (i !== this.length - 1) {
-        const separator = ',';
-        result += this[i] + separator;
-      } else {
-        result += this[i];
-      }
-    }
+    this.forEach(item => {
+      result += separator + item;
+      separator = ',';
+    });
     return result;
   }
 
