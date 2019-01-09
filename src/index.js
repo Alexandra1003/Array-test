@@ -14,19 +14,21 @@ class MyArray {
   push(...args) {
     for (let i = 0; i < args.length; i++) {
       this[this.length] = args[i];
-      this.length = this.length + 1;
+      this.length += 1;
     }
     return this.length;
   }
 
   pop() {
+    if (this.length === 0) {
+      return;
+    }
+
     const deletedKey = this.length - 1;
     const deletedValue = this[deletedKey];
     delete this[deletedKey];
+    this.length -= 1;
 
-    if (this.length > 0) {
-      this.length = this.length - 1;
-    }
     return deletedValue;
   }
 
@@ -46,10 +48,6 @@ class MyArray {
   }
 
   forEach(callback, thisArg) {
-    if (!callback) {
-      return;
-    }
-
     for (let i = 0; i < this.length; i++) {
       callback.call(thisArg, this[i], i, this);
     }
@@ -82,9 +80,7 @@ class MyArray {
     const newObj = new MyArray();
 
     for (let i = 0; i < this.length; i++) {
-      const match = callback.call(thisArg, this[i], i, this);
-
-      if (match) {
+      if (callback.call(thisArg, this[i], i, this)) {
         newObj.push(this[i]);
       }
     }
