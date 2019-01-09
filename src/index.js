@@ -14,19 +14,21 @@ class MyArray {
   push(...args) {
     for (let i = 0; i < args.length; i++) {
       this[this.length] = args[i];
-      this.length = this.length + 1;
+      this.length += 1;
     }
     return this.length;
   }
 
   pop() {
+    if (this.length === 0) {
+      return;
+    }
+
     const deletedKey = this.length - 1;
     const deletedValue = this[deletedKey];
     delete this[deletedKey];
+    this.length -= 1;
 
-    if (this.length > 0) {
-      this.length = this.length - 1;
-    }
     return deletedValue;
   }
 
@@ -35,21 +37,20 @@ class MyArray {
 
     if (arguments.length === 1) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr.push(arrayLike[i]);
+        newArr[i] = arrayLike[i];
+        newArr.length += 1;
       }
     } else if (mapFn) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr.push(mapFn.call(thisArg, arrayLike[i]));
+        newArr[i] = mapFn.call(thisArg, arrayLike[i]);
+        newArr.length += 1;
       }
     }
+
     return newArr;
   }
 
   forEach(callback, thisArg) {
-    if (!callback) {
-      return;
-    }
-
     for (let i = 0; i < this.length; i++) {
       callback.call(thisArg, this[i], i, this);
     }
@@ -59,7 +60,8 @@ class MyArray {
     const newObj = new MyArray();
 
     for (let i = 0; i < this.length; i++) {
-      newObj.push(callback.call(thisArg, this[i], i, this));
+      newObj[i] = callback.call(thisArg, this[i], i, this);
+      newObj.length += 1;
     }
 
     return newObj;
@@ -82,10 +84,9 @@ class MyArray {
     const newObj = new MyArray();
 
     for (let i = 0; i < this.length; i++) {
-      const match = callback.call(thisArg, this[i], i, this);
-
-      if (match) {
-        newObj.push(this[i]);
+      if (callback.call(thisArg, this[i], i, this)) {
+        newObj[newObj.length] = this[i];
+        newObj.length += 1;
       }
     }
 
@@ -111,45 +112,46 @@ class MyArray {
   }
 
   sort(compareFunc) {
-    if (compareFunc) {
-      let temp = null;
+    let comparator = compareFunc;
 
-      for (let j = this.length; j > 1; j--) {
-        for (let i = 0; i < this.length - 1; i++) {
-          if (compareFunc(this[i], this[i + 1]) > 0) {
-            temp = this[i];
-            this[i] = this[i + 1];
-            this[i + 1] = temp;
-          }
+    if (!comparator) {
+      comparator = (a, b) => {
+        const stringA = String(a);
+        const stringB = String(b);
+
+        if (stringA > stringB) {
+          return 1;
+        } else if (stringB > stringA) {
+          return -1;
+        } else {
+          return 0;
         }
-      }
-      return this;
-    } else {
-      for (let i = 1; i < this.length; i++) {
-        const current = this[i];
-        let j = i;
-
-        while (j > 0 && String(this[j - 1]) > String(current)) {
-          this[j] = this[j - 1];
-          j -= 1;
-        }
-
-        this[j] = current;
-      }
-      return this;
+      };
     }
+
+    let temp = null;
+
+    for (let j = this.length; j > 1; j--) {
+      for (let i = 0; i < this.length - 1; i++) {
+        if (comparator(this[i], this[i + 1]) > 0) {
+          temp = this[i];
+          this[i] = this[i + 1];
+          this[i + 1] = temp;
+        }
+      }
+    }
+    return this;
   }
 
   slice(begin, end) {
     const newArr = new MyArray();
-    let start = begin ? begin : 0;
-    let finish = end ? end : this.length;
 
-    start = start < 0 ? this.length + start : start;
-    finish = finish < 0 ? this.length + finish : finish;
+    const start = begin < 0 ? this.length + begin : begin || 0;
+    const finish = end < 0 ? this.length + end : end || this.length;
 
     for (let i = start; i < finish; i++) {
-      newArr.push(this[i]);
+      newArr[newArr.length] = this[i];
+      newArr.length += 1;
     }
     return newArr;
   }
