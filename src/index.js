@@ -37,13 +37,16 @@ class MyArray {
 
     if (arguments.length === 1) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr.push(arrayLike[i]);
+        newArr[i] = arrayLike[i];
+        newArr.length += 1;
       }
     } else if (mapFn) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr.push(mapFn.call(thisArg, arrayLike[i]));
+        newArr[i] = mapFn.call(thisArg, arrayLike[i]);
+        newArr.length += 1;
       }
     }
+
     return newArr;
   }
 
@@ -57,7 +60,8 @@ class MyArray {
     const newObj = new MyArray();
 
     for (let i = 0; i < this.length; i++) {
-      newObj.push(callback.call(thisArg, this[i], i, this));
+      newObj[i] = callback.call(thisArg, this[i], i, this);
+      newObj.length += 1;
     }
 
     return newObj;
@@ -81,7 +85,8 @@ class MyArray {
 
     for (let i = 0; i < this.length; i++) {
       if (callback.call(thisArg, this[i], i, this)) {
-        newObj.push(this[i]);
+        newObj[newObj.length] = this[i];
+        newObj.length += 1;
       }
     }
 
@@ -140,14 +145,13 @@ class MyArray {
 
   slice(begin, end) {
     const newArr = new MyArray();
-    let start = begin || 0;
-    let finish = end || this.length;
 
-    start = start < 0 ? this.length + start : start;
-    finish = finish < 0 ? this.length + finish : finish;
+    const start = begin < 0 ? this.length + begin : begin || 0;
+    const finish = end < 0 ? this.length + end : end || this.length;
 
     for (let i = start; i < finish; i++) {
-      newArr.push(this[i]);
+      newArr[newArr.length] = this[i];
+      newArr.length += 1;
     }
     return newArr;
   }
