@@ -1,6 +1,25 @@
-class MyArray {
+interface IMyArray<T> {
   length: number;
-  [key: number] : any;
+  push(...args: T[]) : number;
+  pop() : T;
+  forEach(callback:(item: T, index: number, array: T[]) => void, thisArg?: any) : void;
+  map<R>(callback:(item: T, index: number, array: T[]) => any, thisArg?: any) : R;
+}
+
+/* map(callback, thisArg) {
+  const newObj = new MyArray();
+
+  for (let i = 0; i < this.length; i++) {
+    newObj[i] = callback.call(thisArg, this[i], i, this);
+    newObj.length += 1;
+  }
+
+  return newObj;
+} */
+
+class MyArray<T> implements IMyArray<T>{
+  length: number;
+  [key: number] : T;
   constructor(...args: any[]) {
     if (args.length === 1 && typeof args[0] === 'number') {
       this.length = args[0];
@@ -13,7 +32,7 @@ class MyArray {
     }
   }
 
-  push<T>(...args: T[]) : number {
+  push(...args: T[]) : number {
     for (let i = 0; i < args.length; i++) {
       this[this.length] = args[i];
       this.length += 1;
@@ -21,7 +40,7 @@ class MyArray {
     return this.length;
   }
 
-  pop() {
+  pop() : T {
     if (this.length === 0) {
       return;
     }
@@ -58,7 +77,7 @@ class MyArray {
     }
   }
 
-  map(callback, thisArg) {
+  map<R>(callback, thisArg) : R {
     const newObj = new MyArray();
 
     for (let i = 0; i < this.length; i++) {
