@@ -115,7 +115,7 @@ class MyArray<T> implements IMyArray<T>{
     return newObj;
   }
 
-  reduce<R>(callback: (accum: T, item: T, index: number, array: IMyArray<T>) => R, initialValue?: any): R {
+  reduce<R>(callback: (accum: R, item: T, index: number, array: IMyArray<T>) => R, initialValue?: R): R {
     if (this.length === 0 && !initialValue) {
       throw new TypeError('MyArray.prototype.reduce called on null or undefined');
     }
@@ -127,10 +127,10 @@ class MyArray<T> implements IMyArray<T>{
     let accumulator = initialValue === undefined ? this[0] : callback(initialValue, this[0], 0, this);
 
     for (let i = 1; i < this.length; i++) {
-      accumulator = callback(accumulator, this[i], i, this);
+      accumulator = callback(accumulator as R, this[i], i, this);
     }
 
-    return accumulator;
+    return accumulator as R;
   }
 
   sort(compareFunc?: (a: any, b: any) => number): this {
