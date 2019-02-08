@@ -3,10 +3,10 @@ interface IMyArray<T> {
   push(...args: T[]): number;
   pop(): T;
   forEach(callback: (item: T, index: number, array: IMyArray<T>) => void, thisArg?: any): void;
-  map<R>(callback: (item: T, index: number, array: IMyArray<T>) => any, thisArg?: any): IMyArray<R>;
+  map<R>(callback: (item: T, index: number, array: IMyArray<T>) => R, thisArg?: any): IMyArray<R>;
   toString(): string;
-  filter(callback: (item: T, index: number, array: IMyArray<T>) => any, thisArg?: any): IMyArray<T>;
-  reduce<R>(callback: (accum: T, item: T, index: number, array: IMyArray<T>) => any, initialValue?: any): R;
+  filter(callback: (item: T, index: number, array: IMyArray<T>) => T, thisArg?: any): IMyArray<T>;
+  reduce<R>(callback: (accum: T, item: T, index: number, array: IMyArray<T>) => R, initialValue?: any): R;
   sort(compareFunc?: (a: any, b: any) => number): this;
   slice(begin?: number, end?: number): IMyArray<T>;
   find(callback: (item: T, index: number, array: IMyArray<T>) => boolean, thisArg?: any): T;
@@ -48,8 +48,8 @@ class MyArray<T> implements IMyArray<T>{
     return deletedValue;
   }
 
-  static from(arrayLike, mapFn, thisArg) {
-    const newArr = new MyArray();
+  static from<T, R>(arrayLike: IMyIterable<T> | any, mapFn?: (value: T, index: number) => R, thisArg?: any): MyArray<R> {
+    const newArr = new MyArray<R>();
 
     if (arguments.length === 1) {
       for (let i = 0; i < arrayLike.length; i++) {
@@ -66,13 +66,13 @@ class MyArray<T> implements IMyArray<T>{
     return newArr;
   }
 
-  forEach(callback, thisArg) {
+  forEach(callback: (item: T, index: number, array: IMyArray<T>) => void, thisArg?: any): void {
     for (let i = 0; i < this.length; i++) {
       callback.call(thisArg, this[i], i, this);
     }
   }
 
-  map<R>(callback, thisArg): MyArray<R> {
+  map<R>(callback: (item: T, index: number, array: IMyArray<T>) => any, thisArg?: any): MyArray<R> {
     const newObj = new MyArray<R>();
 
     for (let i = 0; i < this.length; i++) {
@@ -96,7 +96,7 @@ class MyArray<T> implements IMyArray<T>{
     return result;
   }
 
-  filter(callback, thisArg): MyArray<T> {
+  filter(callback: (item: T, index: number, array: IMyArray<T>) => any, thisArg?: any): MyArray<T> {
     const newObj = new MyArray<T>();
 
     for (let i = 0; i < this.length; i++) {
@@ -109,7 +109,7 @@ class MyArray<T> implements IMyArray<T>{
     return newObj;
   }
 
-  reduce<R>(callback, initialValue): R {
+  reduce<R>(callback: (accum: T, item: T, index: number, array: IMyArray<T>) => any, initialValue?: any): R {
     if (this.length === 0 && !initialValue) {
       throw new TypeError('MyArray.prototype.reduce called on null or undefined');
     }
@@ -127,7 +127,7 @@ class MyArray<T> implements IMyArray<T>{
     return accumulator;
   }
 
-  sort(compareFunc): this {
+  sort(compareFunc?: (a: any, b: any) => number): this {
     let comparator = compareFunc;
 
     if (!comparator) {
@@ -159,8 +159,8 @@ class MyArray<T> implements IMyArray<T>{
     return this;
   }
 
-  slice(begin, end) : MyArray<T> {
-    const newArr = new MyArray();
+  slice(begin?: number, end?: number): MyArray<T> {
+    const newArr = new MyArray<T>();
 
     const start = begin < 0 ? this.length + begin : begin || 0;
     const finish = end < 0 ? this.length + end : end || this.length;
@@ -172,7 +172,7 @@ class MyArray<T> implements IMyArray<T>{
     return newArr;
   }
 
-  find(callback, thisArg): T {
+  find(callback: (item: T, index: number, array: IMyArray<T>) => boolean, thisArg?: any): T {
     if (typeof (callback) !== 'function') {
       throw new TypeError('Callback is not a function.');
     }
