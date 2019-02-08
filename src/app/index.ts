@@ -5,13 +5,12 @@ interface IMyArray<T> {
   forEach(callback: (item: T, index: number, array: IMyArray<T>) => void, thisArg?: any): void;
   map<R>(callback: (item: T, index: number, array: IMyArray<T>) => R, thisArg?: any): IMyArray<R>;
   toString(): string;
-  filter(callback: (item: T, index: number, array: IMyArray<T>) => T, thisArg?: any): IMyArray<T>;
+  filter(callback: (item: T, index: number, array: IMyArray<T>) => any, thisArg?: any): IMyArray<T>;
   reduce<R>(callback: (accum: T, item: T, index: number, array: IMyArray<T>) => R, initialValue?: any): R;
-  sort(compareFunc?: (a: any, b: any) => number): this;
+  sort(compareFunc?: (a: T, b: T) => number): this;
   slice(begin?: number, end?: number): IMyArray<T>;
   find(callback: (item: T, index: number, array: IMyArray<T>) => boolean, thisArg?: any): T;
 }
-
 
 interface IMyIterable<T> {
   length: number;
@@ -82,7 +81,7 @@ class MyArray<T> implements IMyArray<T> {
     }
   }
 
-  map<R>(callback: (item: T, index: number, array: IMyArray<T>) => any, thisArg?: any): MyArray<R> {
+  map<R>(callback: (item: T, index: number, array: IMyArray<T>) => R, thisArg?: any): MyArray<R> {
     const newObj = new MyArray<R>();
 
     for (let i = 0; i < this.length; i++) {
@@ -137,7 +136,7 @@ class MyArray<T> implements IMyArray<T> {
     return accumulator as R;
   }
 
-  sort(compareFunc?: (a: any, b: any) => number): this {
+  sort(compareFunc?: (a: T, b: T) => number): this {
     let comparator = compareFunc;
 
     if (!comparator) {
