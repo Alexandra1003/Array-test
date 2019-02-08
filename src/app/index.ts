@@ -12,12 +12,13 @@ interface IMyArray<T> {
   find(callback: (item: T, index: number, array: IMyArray<T>) => boolean, thisArg?: any): T;
 }
 
+
 interface IMyIterable<T> {
   length: number;
   [key: number]: T;
 }
 
-class MyArray<T> implements IMyArray<T>{
+class MyArray<T> implements IMyArray<T> {
   length: number;
   [key: number]: T;
   
@@ -54,17 +55,20 @@ class MyArray<T> implements IMyArray<T>{
     return deletedValue;
   }
 
+  static from<T>(arrayLike: IMyIterable<T>): MyArray<T>;
+  static from<T, R>(arrayLike: IMyIterable<T>, mapFn: (value: T, index: number) => R, thisArg: any): MyArray<R>;
+  
   static from<T, R>(arrayLike: IMyIterable<T>, mapFn?: (value: T, index: number) => R, thisArg?: any): MyArray<T> | MyArray<R> {
     const newArr: MyArray<T> | MyArray<R> = new MyArray();
 
     if (arguments.length === 1) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr[i] = arrayLike[i] as T;
+        newArr[i] = arrayLike[i];
         newArr.length += 1;
       }
     } else if (mapFn) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr[i] = mapFn.call(thisArg, arrayLike[i]) as R;
+        newArr[i] = mapFn.call(thisArg, arrayLike[i]);
         newArr.length += 1;
       }
     }
