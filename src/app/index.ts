@@ -12,17 +12,23 @@ interface IMyArray<T> {
   find(callback: (item: T, index: number, array: IMyArray<T>) => boolean, thisArg?: any): T;
 }
 
+interface IMyIterable<T> {
+  length: number;
+  [key: number]: T;
+}
+
 class MyArray<T> implements IMyArray<T>{
   length: number;
   [key: number]: T;
-  constructor(...args: any[]) {
+  
+  constructor(...args: T[] | [ number ]) {
     if (args.length === 1 && typeof args[0] === 'number') {
       this.length = args[0];
     } else {
       this.length = args.length;
 
       for (let i = 0; i < args.length; i++) {
-        this[i] = args[i];
+        this[i] = args[i] as T;
       }
     }
   }
@@ -48,17 +54,17 @@ class MyArray<T> implements IMyArray<T>{
     return deletedValue;
   }
 
-  static from<T, R>(arrayLike: IMyIterable<T> | any, mapFn?: (value: T, index: number) => R, thisArg?: any): MyArray<R> {
-    const newArr = new MyArray<R>();
+  static from<T, R>(arrayLike: IMyIterable<T>, mapFn?: (value: T, index: number) => R, thisArg?: any): MyArray<T> | MyArray<R> {
+    const newArr: MyArray<T> | MyArray<R> = new MyArray();
 
     if (arguments.length === 1) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr[i] = arrayLike[i];
+        newArr[i] = arrayLike[i] as T;
         newArr.length += 1;
       }
     } else if (mapFn) {
       for (let i = 0; i < arrayLike.length; i++) {
-        newArr[i] = mapFn.call(thisArg, arrayLike[i]);
+        newArr[i] = mapFn.call(thisArg, arrayLike[i]) as R;
         newArr.length += 1;
       }
     }
@@ -109,7 +115,7 @@ class MyArray<T> implements IMyArray<T>{
     return newObj;
   }
 
-  reduce<R>(callback: (accum: T, item: T, index: number, array: IMyArray<T>) => any, initialValue?: any): R {
+  reduce<R>(callback: (accum: T, item: T, index: number, array: IMyArray<T>) => R, initialValue?: any): R {
     if (this.length === 0 && !initialValue) {
       throw new TypeError('MyArray.prototype.reduce called on null or undefined');
     }
